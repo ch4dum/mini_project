@@ -156,12 +156,23 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		{
 
 		}
-		cmd.x = (x / 1870.0) - 1.0;
-		cmd.y = (y / 1890.0) - 1.0;
+
+		if (x < 1023.75){x = 0.0;}
+		else if (x > 3071.25){x = 4095;}
+		else {x = 2047.5;}
+
+		if (y < 1023.75){y = 0.0;}
+		else if (y > 3071.25){y = 4095;}
+		else {y = 2047.5;}
+
+		cmd.x = ((x / 2047.5) - 1.0)* -1.0;
+		cmd.y = (y / 2047.5) - 1.0;
+
+
 		rc = rcl_publish(&robot1_publisher, &robot1_cmd_vel, NULL);
-		rc = rcl_publish(&robot2_publisher, &robot1_cmd_vel, NULL);
-		rc = rcl_publish(&robot3_publisher, &robot1_cmd_vel, NULL);
-		rc = rcl_publish(&robot4_publisher, &robot1_cmd_vel, NULL);
+		rc = rcl_publish(&robot2_publisher, &robot2_cmd_vel, NULL);
+		rc = rcl_publish(&robot3_publisher, &robot3_cmd_vel, NULL);
+		rc = rcl_publish(&robot4_publisher, &robot4_cmd_vel, NULL);
 		HAL_IWDG_Refresh(&hiwdg);
 		x = ADC_RawRead[0];
 		y = ADC_RawRead[1];
